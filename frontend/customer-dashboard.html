@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apex Mortgage - Customer Dashboard</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="css/style.css" rel="stylesheet">
+    <!-- Page Security Guard -->
+    <script src="js/api.js"></script>
+    <script>
+        guardPage("ROLE_CUSTOMER");
+    </script>
+</head>
+<body>
+
+    <div class="app-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="brand">
+                <i class="bi bi-bank"></i>
+                <span>Apex Mortgage</span>
+            </div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="customer-dashboard.html" class="active">
+                        <i class="bi bi-speedometer2"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="apply-loan.html">
+                        <i class="bi bi-file-earmark-plus"></i>
+                        <span>Apply Loan</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="my-loans.html">
+                        <i class="bi bi-journal-text"></i>
+                        <span>My Loans</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="payment.html">
+                        <i class="bi bi-credit-card"></i>
+                        <span>Payment History</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="profile.html">
+                        <i class="bi bi-person-circle"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <button id="logout-btn" class="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Navbar -->
+            <header class="top-navbar">
+                <div class="d-flex align-items-center gap-3">
+                    <button class="btn btn-light d-lg-none" id="sidebar-toggle">
+                        <i class="bi bi-list fs-4"></i>
+                    </button>
+                    <h4 class="mb-0 fw-bold d-none d-sm-block">Dashboard Overview</h4>
+                </div>
+                
+                <div class="d-flex align-items-center gap-4">
+                    <!-- Notifications -->
+                    <div class="position-relative cursor-pointer">
+                        <i class="bi bi-bell fs-5 text-secondary"></i>
+                        <span class="notification-badge">3</span>
+                    </div>
+                    
+                    <!-- User Menu -->
+                    <div class="navbar-user" onclick="window.location.href='profile.html'">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100" alt="Profile">
+                        <div class="d-none d-md-block">
+                            <div class="fw-semibold small" id="nav-user-name">Loading...</div>
+                            <div class="text-secondary" style="font-size: 0.75rem;" id="nav-user-email">...</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Body -->
+            <div class="container-fluid p-4">
+                <!-- Welcome Banner -->
+                <div class="glass-panel p-4 rounded-4 mb-4 text-dark d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                    <div>
+                        <h2 class="fw-bold mb-1">Hello, <span class="text-primary" id="welcome-name">User</span>!</h2>
+                        <p class="text-secondary mb-0">Track and manage your applications, verify loan status, and settle EMI options seamlessly.</p>
+                    </div>
+                    <div>
+                        <a href="apply-loan.html" class="btn btn-primary d-flex align-items-center gap-2">
+                            <i class="bi bi-plus-circle"></i> New Loan Request
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Stats Cards Row -->
+                <div class="row g-4 mb-4">
+                    <!-- Stat Card: Total Applied -->
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="card stat-card h-100 p-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-secondary small fw-semibold">Loans Applied</span>
+                                    <h3 class="fw-bold mt-1 mb-0" id="stat-total">0</h3>
+                                </div>
+                                <div class="stat-icon bg-primary-subtle text-primary">
+                                    <i class="bi bi-file-earmark-text"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Stat Card: Approved -->
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="card stat-card approved h-100 p-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-secondary small fw-semibold">Approved Loans</span>
+                                    <h3 class="fw-bold mt-1 mb-0" id="stat-approved">0</h3>
+                                </div>
+                                <div class="stat-icon bg-success-subtle text-success">
+                                    <i class="bi bi-check-circle"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stat Card: Pending -->
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="card stat-card pending h-100 p-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-secondary small fw-semibold">Pending Loans</span>
+                                    <h3 class="fw-bold mt-1 mb-0" id="stat-pending">0</h3>
+                                </div>
+                                <div class="stat-icon bg-warning-subtle text-warning">
+                                    <i class="bi bi-clock-history"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stat Card: Rejected -->
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="card stat-card rejected h-100 p-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-secondary small fw-semibold">Rejected Loans</span>
+                                    <h3 class="fw-bold mt-1 mb-0" id="stat-rejected">0</h3>
+                                </div>
+                                <div class="stat-icon bg-danger-subtle text-danger">
+                                    <i class="bi bi-x-circle"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content Panel -->
+                <div class="row g-4">
+                    <!-- Recent Applications Table -->
+                    <div class="col-lg-8">
+                        <div class="card p-4 h-100">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h5 class="fw-bold mb-0">Recent Applications</h5>
+                                <a href="my-loans.html" class="btn btn-sm btn-outline-primary">View All</a>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th>Loan ID</th>
+                                            <th>Loan Type</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recent-loans-body">
+                                        <!-- Dynamically inserted rows -->
+                                        <tr>
+                                            <td colspan="5" class="text-center text-secondary py-4">
+                                                <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+                                                Fetching your mortgage information...
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions Side Card -->
+                    <div class="col-lg-4">
+                        <div class="card p-4 h-100">
+                            <h5 class="fw-bold mb-4">Quick Actions</h5>
+                            <div class="d-grid gap-3">
+                                <a href="apply-loan.html" class="btn btn-outline-primary py-3 d-flex align-items-center justify-content-center gap-3">
+                                    <i class="bi bi-file-earmark-plus fs-5"></i>
+                                    <div class="text-start">
+                                        <div class="fw-semibold">Apply Loan</div>
+                                        <div class="small text-secondary font-normal" style="font-size: 0.75rem;">Digital eligibility check &amp; apply</div>
+                                    </div>
+                                </a>
+                                <a href="my-loans.html" class="btn btn-outline-primary py-3 d-flex align-items-center justify-content-center gap-3">
+                                    <i class="bi bi-journal-text fs-5"></i>
+                                    <div class="text-start">
+                                        <div class="fw-semibold">View Loans</div>
+                                        <div class="small text-secondary font-normal" style="font-size: 0.75rem;">Check current loan statuses</div>
+                                    </div>
+                                </a>
+                                <a href="payment.html" class="btn btn-outline-primary py-3 d-flex align-items-center justify-content-center gap-3">
+                                    <i class="bi bi-credit-card fs-5"></i>
+                                    <div class="text-start">
+                                        <div class="fw-semibold">Payments</div>
+                                        <div class="small text-secondary font-normal" style="font-size: 0.75rem;">Pay your active EMI installments</div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="js/auth.js"></script>
+    <script src="js/customer.js"></script>
+</body>
+</html>

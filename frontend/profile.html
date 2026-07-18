@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apex Mortgage - User Profile</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="css/style.css" rel="stylesheet">
+    <!-- Page Security Guard -->
+    <script src="js/api.js"></script>
+    <script>
+        guardPage(); // Check login but allow both customer and admin
+    </script>
+</head>
+<body>
+
+    <div class="app-wrapper">
+        <!-- Sidebar (Rendered Dynamically Based on Role) -->
+        <aside class="sidebar">
+            <div class="brand">
+                <i class="bi bi-bank"></i>
+                <span id="sidebar-brand-name">Apex Banking</span>
+            </div>
+            <ul class="sidebar-menu" id="dynamic-sidebar-menu">
+                <!-- Links will be populated by script based on user role -->
+            </ul>
+            <div class="sidebar-footer">
+                <button id="logout-btn" class="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Navbar -->
+            <header class="top-navbar">
+                <div class="d-flex align-items-center gap-3">
+                    <button class="btn btn-light d-lg-none" id="sidebar-toggle">
+                        <i class="bi bi-list fs-4"></i>
+                    </button>
+                    <h4 class="mb-0 fw-bold d-none d-sm-block">User Profile Settings</h4>
+                </div>
+                
+                <div class="d-flex align-items-center gap-4">
+                    <!-- Notifications -->
+                    <div class="position-relative cursor-pointer">
+                        <i class="bi bi-bell fs-5 text-secondary"></i>
+                        <span class="notification-badge" id="nav-notif-count">3</span>
+                    </div>
+                    
+                    <!-- User Menu -->
+                    <div class="navbar-user">
+                        <img id="nav-profile-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100" alt="Profile">
+                        <div class="d-none d-md-block">
+                            <div class="fw-semibold small" id="nav-user-name">Loading...</div>
+                            <div class="text-secondary" style="font-size: 0.75rem;" id="nav-user-email">...</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Body -->
+            <div class="container-fluid p-4">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10 col-xl-8">
+                        <div class="card p-4 p-md-5">
+                            
+                            <!-- Profile Header -->
+                            <div class="text-center pb-4 mb-4 border-bottom">
+                                <div class="position-relative d-inline-block mb-3">
+                                    <img id="profile-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=180" class="rounded-circle border border-4 border-white shadow-lg" alt="Avatar" style="width: 120px; height: 120px; object-fit: cover;">
+                                    <span class="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle p-2 shadow-md cursor-pointer" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;" onclick="showToast('Profile image uploads can be integrated here.', 'info')">
+                                        <i class="bi bi-camera"></i>
+                                    </span>
+                                </div>
+                                <h3 class="fw-bold mb-1" id="profile-name-title">-</h3>
+                                <p class="text-secondary small mb-2" id="profile-email-title">-</p>
+                                <span class="badge bg-secondary-subtle text-primary px-3 py-2 rounded-pill fw-semibold" id="profile-role-badge">-</span>
+                            </div>
+
+                            <!-- Profile Details / Form -->
+                            <form id="profile-form" class="needs-validation" novalidate>
+                                <div class="row g-4">
+                                    <!-- Name Field -->
+                                    <div class="col-md-6">
+                                        <label for="profile-name" class="form-label fw-semibold">Full Name</label>
+                                        <input type="text" id="profile-name" class="form-control py-2.5" required minlength="2">
+                                        <div class="invalid-feedback">Please enter your full name (minimum 2 characters).</div>
+                                    </div>
+
+                                    <!-- Email Field -->
+                                    <div class="col-md-6">
+                                        <label for="profile-email" class="form-label fw-semibold">Email Address</label>
+                                        <input type="email" id="profile-email" class="form-control py-2.5" required>
+                                        <div class="invalid-feedback">Please enter a valid email address.</div>
+                                    </div>
+
+                                    <!-- Role (Read Only) -->
+                                    <div class="col-md-12">
+                                        <label for="profile-role" class="form-label fw-semibold">Security Role</label>
+                                        <input type="text" id="profile-role" class="form-control py-2.5 bg-light" disabled>
+                                    </div>
+
+                                    <!-- Submit buttons -->
+                                    <div class="col-12 mt-4 text-end">
+                                        <button type="submit" class="btn btn-primary px-5 py-2.5">
+                                            <i class="bi bi-save me-2"></i>Save Profile Changes
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="js/auth.js"></script>
+    <!-- Dynamic Sidebar and Profile Script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const role = getRole();
+            const name = getUserName();
+            const email = getUserEmail();
+            
+            // Set navbar avatar and notification count based on role
+            const navAvatar = document.getElementById("nav-profile-img");
+            const profileAvatar = document.getElementById("profile-avatar");
+            const sidebarBrandName = document.getElementById("sidebar-brand-name");
+            const navNotifCount = document.getElementById("nav-notif-count");
+            
+            if (role === "ROLE_ADMIN") {
+                const adminImg = "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&q=80&w=100";
+                const adminProfileImg = "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&q=80&w=180";
+                if (navAvatar) navAvatar.src = adminImg;
+                if (profileAvatar) profileAvatar.src = adminProfileImg;
+                if (sidebarBrandName) sidebarBrandName.textContent = "Apex Admin";
+                if (navNotifCount) navNotifCount.textContent = "5";
+            }
+
+            // Populate Sidebar Menu dynamically
+            const menuContainer = document.getElementById("dynamic-sidebar-menu");
+            if (menuContainer) {
+                let menuHtml = "";
+                if (role === "ROLE_ADMIN") {
+                    menuHtml = `
+                        <li>
+                            <a href="admin-dashboard.html">
+                                <i class="bi bi-speedometer2"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="manage-loans.html">
+                                <i class="bi bi-gear-fill"></i>
+                                <span>Manage Loans</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="profile.html" class="active">
+                                <i class="bi bi-person-circle"></i>
+                                <span>Profile</span>
+                            </a>
+                        </li>
+                    `;
+                } else {
+                    menuHtml = `
+                        <li>
+                            <a href="customer-dashboard.html">
+                                <i class="bi bi-speedometer2"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="apply-loan.html">
+                                <i class="bi bi-file-earmark-plus"></i>
+                                <span>Apply Loan</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="my-loans.html">
+                                <i class="bi bi-journal-text"></i>
+                                <span>My Loans</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="payment.html">
+                                <i class="bi bi-credit-card"></i>
+                                <span>Payment History</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="profile.html" class="active">
+                                <i class="bi bi-person-circle"></i>
+                                <span>Profile</span>
+                            </a>
+                        </li>
+                    `;
+                }
+                menuContainer.innerHTML = menuHtml;
+            }
+
+            // Populate Profile Data
+            const nameInput = document.getElementById("profile-name");
+            const emailInput = document.getElementById("profile-email");
+            const roleInput = document.getElementById("profile-role");
+            
+            const nameTitle = document.getElementById("profile-name-title");
+            const emailTitle = document.getElementById("profile-email-title");
+            const roleBadge = document.getElementById("profile-role-badge");
+
+            if (nameInput) nameInput.value = name;
+            if (emailInput) emailInput.value = email;
+            if (roleInput) roleInput.value = role === "ROLE_ADMIN" ? "System Administrator (ROLE_ADMIN)" : "Standard Client (ROLE_CUSTOMER)";
+
+            if (nameTitle) nameTitle.textContent = name;
+            if (emailTitle) emailTitle.textContent = email;
+            if (roleBadge) roleBadge.textContent = role === "ROLE_ADMIN" ? "Administrator" : "Client Portal Access";
+
+            // Profile Form Submission
+            const profileForm = document.getElementById("profile-form");
+            if (profileForm) {
+                profileForm.addEventListener("submit", (e) => {
+                    e.preventDefault();
+
+                    if (!profileForm.checkValidity()) {
+                        e.stopPropagation();
+                        profileForm.classList.add("was-validated");
+                        return;
+                    }
+
+                    const updatedName = nameInput.value;
+                    const updatedEmail = emailInput.value;
+
+                    // Update Local Storage values (since there's no backend endpoint, simulation + localStorage update is ideal)
+                    localStorage.setItem("userName", updatedName);
+                    localStorage.setItem("userEmail", updatedEmail);
+
+                    // Update UI titles & Navbar text
+                    if (nameTitle) nameTitle.textContent = updatedName;
+                    if (emailTitle) emailTitle.textContent = updatedEmail;
+                    
+                    const navNameEl = document.getElementById("nav-user-name");
+                    const navEmailEl = document.getElementById("nav-user-email");
+                    if (navNameEl) navNameEl.textContent = updatedName;
+                    if (navEmailEl) navEmailEl.textContent = updatedEmail;
+
+                    showToast("Profile credentials updated successfully!", "success");
+                });
+            }
+        });
+    </script>
+</body>
+</html>

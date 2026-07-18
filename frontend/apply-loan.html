@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apex Mortgage - Apply for a Loan</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="css/style.css" rel="stylesheet">
+    <!-- Page Security Guard -->
+    <script src="js/api.js"></script>
+    <script>
+        guardPage("ROLE_CUSTOMER");
+    </script>
+</head>
+<body>
+
+    <div class="app-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="brand">
+                <i class="bi bi-bank"></i>
+                <span>Apex Mortgage</span>
+            </div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="customer-dashboard.html">
+                        <i class="bi bi-speedometer2"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="apply-loan.html" class="active">
+                        <i class="bi bi-file-earmark-plus"></i>
+                        <span>Apply Loan</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="my-loans.html">
+                        <i class="bi bi-journal-text"></i>
+                        <span>My Loans</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="payment.html">
+                        <i class="bi bi-credit-card"></i>
+                        <span>Payment History</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="profile.html">
+                        <i class="bi bi-person-circle"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <button id="logout-btn" class="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Navbar -->
+            <header class="top-navbar">
+                <div class="d-flex align-items-center gap-3">
+                    <button class="btn btn-light d-lg-none" id="sidebar-toggle">
+                        <i class="bi bi-list fs-4"></i>
+                    </button>
+                    <h4 class="mb-0 fw-bold d-none d-sm-block">New Loan Request</h4>
+                </div>
+                
+                <div class="d-flex align-items-center gap-4">
+                    <!-- Notifications -->
+                    <div class="position-relative cursor-pointer">
+                        <i class="bi bi-bell fs-5 text-secondary"></i>
+                        <span class="notification-badge">3</span>
+                    </div>
+                    
+                    <!-- User Menu -->
+                    <div class="navbar-user" onclick="window.location.href='profile.html'">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100" alt="Profile">
+                        <div class="d-none d-md-block">
+                            <div class="fw-semibold small" id="nav-user-name">Loading...</div>
+                            <div class="text-secondary" style="font-size: 0.75rem;" id="nav-user-email">...</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Body -->
+            <div class="container-fluid p-4">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10 col-xl-8">
+                        <div class="card p-4 p-md-5">
+                            <div class="d-flex align-items-center gap-3 mb-4">
+                                <div class="stat-icon bg-primary text-white">
+                                    <i class="bi bi-file-earmark-plus-fill"></i>
+                                </div>
+                                <div>
+                                    <h4 class="fw-bold mb-0">Mortgage Loan Application</h4>
+                                    <p class="text-secondary mb-0">Fill out all information accurately. Details will be checked by underwriters.</p>
+                                </div>
+                            </div>
+                            
+                            <hr class="my-4 text-white-50">
+
+                            <!-- Eligibility Result Banner (Hidden initially) -->
+                            <div id="eligibility-banner" class="alert d-none align-items-center gap-3 rounded-3 py-3 px-4 mb-4" role="alert">
+                                <i id="eligibility-icon" class="bi fs-4"></i>
+                                <div>
+                                    <h6 class="alert-heading fw-bold mb-1" id="eligibility-title">Result</h6>
+                                    <span id="eligibility-text" class="small">Eligibility status explanation...</span>
+                                </div>
+                            </div>
+
+                            <form id="loan-application-form" class="needs-validation" novalidate>
+                                <div class="row g-4">
+                                    <!-- Loan Type -->
+                                    <div class="col-md-6">
+                                        <label for="loanType" class="form-label fw-semibold">Loan Type</label>
+                                        <select class="form-select py-2.5" id="loanType" required>
+                                            <option value="" disabled selected>Choose a loan type...</option>
+                                            <option value="Home Loan">Home Loan (Purchase / Construction)</option>
+                                            <option value="Mortgage Loan">Mortgage against Property</option>
+                                            <option value="Commercial Mortgage">Commercial Real Estate Loan</option>
+                                            <option value="Land Purchase">Land Purchase Loan</option>
+                                        </select>
+                                        <div class="invalid-feedback">Please select a loan type.</div>
+                                    </div>
+
+                                    <!-- Loan Amount -->
+                                    <div class="col-md-6">
+                                        <label for="loanAmount" class="form-label fw-semibold">Requested Loan Amount ($)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">$</span>
+                                            <input type="number" class="form-control py-2.5" id="loanAmount" placeholder="e.g. 150000" min="1" required>
+                                            <div class="invalid-feedback">Please enter a positive loan amount.</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Salary -->
+                                    <div class="col-md-6">
+                                        <label for="salary" class="form-label fw-semibold">Monthly Net Salary ($)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">$</span>
+                                            <input type="number" class="form-control py-2.5" id="salary" placeholder="e.g. 5000" min="25000" required>
+                                            <div class="invalid-feedback">Minimum required monthly salary to apply is $25,000.</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Age -->
+                                    <div class="col-md-6">
+                                        <label for="age" class="form-label fw-semibold">Your Age</label>
+                                        <input type="number" class="form-control py-2.5" id="age" placeholder="e.g. 30" min="21" required>
+                                        <div class="invalid-feedback">Applicant must be at least 21 years of age.</div>
+                                    </div>
+
+                                    <!-- Employment Type -->
+                                    <div class="col-md-12">
+                                        <label for="employmentType" class="form-label fw-semibold">Employment Status</label>
+                                        <select class="form-select py-2.5" id="employmentType" required>
+                                            <option value="" disabled selected>Choose employment status...</option>
+                                            <option value="SALARIED">Salaried Employee (Full-time)</option>
+                                            <option value="SELF_EMPLOYED">Self-Employed / Business Owner</option>
+                                            <option value="UNEMPLOYED">Unemployed / Other</option>
+                                        </select>
+                                        <div class="invalid-feedback">Please select your employment status.</div>
+                                    </div>
+
+                                    <!-- Purpose -->
+                                    <div class="col-md-12">
+                                        <label for="purpose" class="form-label fw-semibold">Purpose of Loan</label>
+                                        <textarea class="form-control" id="purpose" rows="4" placeholder="Briefly explain the purpose of this loan (e.g. purchasing a single-family home in California, renovation, commercial premises...)" required minlength="10"></textarea>
+                                        <div class="invalid-feedback">Please provide a detailed purpose (minimum 10 characters).</div>
+                                    </div>
+
+                                    <!-- Action Buttons -->
+                                    <div class="col-12 mt-5">
+                                        <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+                                            <button type="button" id="check-eligibility-btn" class="btn btn-outline-primary px-4 py-3 d-flex align-items-center justify-content-center gap-2">
+                                                <i class="bi bi-shield-check"></i>
+                                                Check Eligibility
+                                            </button>
+                                            <button type="submit" id="apply-loan-btn" class="btn btn-primary px-5 py-3 d-flex align-items-center justify-content-center gap-2">
+                                                <i class="bi bi-send-fill"></i>
+                                                Submit Loan Application
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="js/auth.js"></script>
+    <script src="js/customer.js"></script>
+</body>
+</html>

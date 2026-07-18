@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apex Mortgage - Premium FinTech Loan Management System</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="css/style.css" rel="stylesheet">
+    <!-- Inline login redirect script -->
+    <script>
+        const token = localStorage.getItem("token");
+        const role = localStorage.getItem("role");
+        if (token && role) {
+            if (role === "ROLE_ADMIN") {
+                window.location.href = "admin-dashboard.html";
+            } else if (role === "ROLE_CUSTOMER") {
+                window.location.href = "customer-dashboard.html";
+            }
+        }
+    </script>
+</head>
+<body>
+
+    <!-- Header / Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="index.html">
+                <i class="bi bi-bank text-primary"></i> APEX MORTGAGE
+            </a>
+            <button class="navbar-brand d-lg-none border-0 bg-transparent text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <i class="bi bi-list fs-3"></i>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
+                <div class="d-flex gap-3 mt-3 mt-lg-0">
+                    <a href="login.html" class="btn btn-outline-light px-4">Login</a>
+                    <a href="register.html" class="btn btn-primary px-4">Apply Now</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section text-center text-lg-start">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <h1 class="display-4 fw-bold mb-3 text-white">Smart &amp; Seamless Mortgage Loans</h1>
+                    <p class="lead mb-4 text-white-50">Secure your dream home with instant eligibility checks, competitive interest rates, and a 100% digital approval system powered by Apex Banking.</p>
+                    <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start">
+                        <a href="register.html" class="btn btn-primary btn-lg px-4 py-3"><i class="bi bi-arrow-right-circle me-2"></i>Get Started</a>
+                        <a href="login.html" class="btn btn-outline-light btn-lg px-4 py-3"><i class="bi bi-shield-lock me-2"></i>Client Portal</a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="glass-panel p-5 rounded-4 text-dark shadow-lg">
+                        <h3 class="fw-bold mb-3"><i class="bi bi-calculator text-primary me-2"></i>Estimate Eligibility</h3>
+                        <p class="text-secondary small">Verify your basic terms to see if you qualify before submitting a complete application.</p>
+                        <form id="landing-check-form">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-semibold">Monthly Income ($)</label>
+                                    <input type="number" id="landing-salary" class="form-control" placeholder="e.g. 5000" required min="1">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-semibold">Age</label>
+                                    <input type="number" id="landing-age" class="form-control" placeholder="e.g. 30" required min="1">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label small fw-semibold">Desired Loan Amount ($)</label>
+                                    <input type="number" id="landing-amount" class="form-control" placeholder="e.g. 150000" required min="1">
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary w-100 py-3 mt-2">Check Pre-Eligibility</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-5 bg-light">
+        <div class="container my-5">
+            <div class="text-center mb-5">
+                <span class="badge bg-secondary-subtle text-primary px-3 py-2 mb-2 rounded-pill">OUR SERVICES</span>
+                <h2 class="fw-bold">Why Choose Apex Mortgage?</h2>
+                <p class="text-secondary col-md-8 mx-auto">We combine advanced technology with secure financing to give you a transparent, smooth, and quick mortgage experience.</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card feature-card h-100 p-4 bg-white">
+                        <div class="stat-icon bg-primary text-white mb-3">
+                            <i class="bi bi-clock-history"></i>
+                        </div>
+                        <h4 class="fw-bold">Instant Eligibility</h4>
+                        <p class="text-secondary">Input your income, age, and loan criteria to instantly see if you qualify. No waiting in lines.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card feature-card h-100 p-4 bg-white">
+                        <div class="stat-icon bg-success text-white mb-3">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <h4 class="fw-bold">100% Digital Approvals</h4>
+                        <p class="text-secondary">Once checked, submit details and watch your loan move from pending to approved in real time.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card feature-card h-100 p-4 bg-white">
+                        <div class="stat-icon bg-warning text-white mb-3">
+                            <i class="bi bi-wallet2"></i>
+                        </div>
+                        <h4 class="fw-bold">Easy EMI Repayments</h4>
+                        <p class="text-secondary">Simulate and complete month-to-month EMI installments directly through your dashboard.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-auto">
+        <div class="container text-center">
+            <p class="mb-0 text-white-50">&copy; 2026 Apex Mortgage Loan Management. All Rights Reserved. Fully Secured via JWT &amp; SSL.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js"></script>
+    <script>
+        document.getElementById("landing-check-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const salary = parseInt(document.getElementById("landing-salary").value);
+            const age = parseInt(document.getElementById("landing-age").value);
+            const amount = parseInt(document.getElementById("landing-amount").value);
+            
+            if (salary < 25000) {
+                showToast("Pre-eligibility check requires a minimum salary of $25,000", "warning");
+                return;
+            }
+            if (age < 21) {
+                showToast("Pre-eligibility check requires age of 21 or older", "warning");
+                return;
+            }
+            if (amount <= 0) {
+                showToast("Please enter a valid loan amount", "warning");
+                return;
+            }
+            
+            // Basic heuristic for pre-check
+            if (amount <= salary * 5) {
+                showToast("Congratulations! You meet the pre-eligibility criteria. Create an account to apply!", "success");
+            } else {
+                showToast("The requested amount exceeds standard pre-eligibility guidelines based on your salary.", "danger");
+            }
+        });
+    </script>
+</body>
+</html>
