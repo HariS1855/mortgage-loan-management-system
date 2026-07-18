@@ -1,0 +1,15 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: Mortgage Loan Management
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mortgage_db
+    username: postgres
+    password: harida5552
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
